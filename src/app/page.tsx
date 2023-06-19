@@ -9,6 +9,12 @@ interface Todo {
   updatedAt: Date;
 }
 
+const toggleTodo = async (id: string, complete: boolean) => {
+  "use server";
+
+  await prisma.todo.update({ where: { id }, data: { complete: complete } });
+};
+
 const getTodos = () => {
   return prisma.todo.findMany();
 };
@@ -26,9 +32,9 @@ export default async function Home() {
           </button>
         </Link>
       </div>
-      <ul className="menu bg-base-200 w-32 rounded-box">
+      <ul className="menu bg-base-200 w-56 rounded-box">
         {todos.map((todo: Todo) => {
-          return <TodoItem key={todo.id} {...todo} />;
+          return <TodoItem toggleTodo={toggleTodo} key={todo.id} {...todo} />;
         })}
       </ul>
     </>
